@@ -114,9 +114,9 @@ const styles = StyleSheet.create({
         width: 250,
         position: 'relative',
         bottom:6,
-        left:30
-       
-        
+        left:30 
     
       },
+
+   
 });
