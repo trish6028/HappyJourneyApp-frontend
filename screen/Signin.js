@@ -1,7 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, ImageBackground, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import baseUrl from '../common/url.js'
 
-export default function Log() {
+
+export default function Log({navigation}) {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [reEnterPassword, setReEnterPassword] = useState('');
+  
+
+    const handleSignUp = async () => {
+        if (password !== reEnterPassword) {
+          Alert.alert("Passwords don't match");
+          return;
+        }
+    
+        try {
+          const response = await fetch(`${baseUrl}/api/users/signup`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username,
+              password,
+            }),
+          });
+    
+          const data = await response.json();
+          console.log(data);
+    
+          if (data.message === 'Signup successful') {
+            alert('Signup successful. You can now log in.');
+          } else {
+            alert('Signup failed. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error during signup:', error);
+        }
+      };
+    
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <ImageBackground source={require('./assets/vv.png')} style={styles.image}>
@@ -16,6 +56,8 @@ export default function Log() {
                             style={styles.input}
                             placeholder="Username"
                             placeholderTextColor="#576574"
+                            value={username}
+                            onChangeText={setUsername}
                         />
                     </View>
                     <View style={styles.inputContainer}>
@@ -25,6 +67,8 @@ export default function Log() {
                             placeholder="Password"
                             placeholderTextColor="#576574"
                             secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
                         />
                     </View>
                     <View style={styles.inputContainer}>
@@ -34,18 +78,20 @@ export default function Log() {
                             placeholder="Re - Enter Password"
                             placeholderTextColor="#576574"
                             secureTextEntry={true}
+                            value={reEnterPassword}
+                            onChangeText={setReEnterPassword}
                         />
                     </View>
 
                     <Text style={{ position: 'relative', top: 25, right: 70, fontSize: 19 }}>Already have an account</Text>
                     <TouchableOpacity style={styles.button1}  >
-                        <Text style={{ color: 'black', fontSize: 22, position: 'relative', top: 5, fontFamily: 'LilitaOne-Regular', left: 45 }}>log in</Text>
+                        <Text onPress={()=> {navigation.navigate('Log')}} style={{ color: 'black', fontSize: 22, position: 'relative', top: 5, fontFamily: 'LilitaOne-Regular', left: 45 }}>log in</Text>
                     </TouchableOpacity>
 
                 </View>
 
                 <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity onPress={handleSignUp}  style={styles.button}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>

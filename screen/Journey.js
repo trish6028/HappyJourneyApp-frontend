@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, FlatList, ImageBackground, } from 'react-native'
 import { FAB } from 'react-native-paper'
 import React from 'react'
+import MapView, { Marker } from 'react-native-maps';
 
 const DATA = [
     {
@@ -46,6 +47,28 @@ export default function Journey() {
 
                     />
                 </View>
+
+
+                <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 37.78825, // Specify your initial latitude
+          longitude: -122.4324, // Specify your initial longitude
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: 37.78825, // Specify the marker's latitude
+            longitude: -122.4324, // Specify the marker's longitude
+          }}
+          title="Marker Title"
+          description="Marker Description"
+        />
+      </MapView>
+    </View>
 
                 <View style={{ flex: 8 }}>
                     <FlatList
@@ -99,5 +122,10 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
         backgroundColor: '#B5A5F7'
-    },
+    }, container: {
+        flex: 5,
+      },
+      map: {
+        flex: 1,
+      },
 })

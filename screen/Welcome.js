@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground,  } from 'react-native'
 import React from 'react'
 
-export default function Welcome() {
+export default function Welcome({navigation}) {
   return (
     <View style={styles.container}>
       <ImageBackground source={require('./assets/p.png')} style={styles.images}>
       <Text style={styles.heading}>HAPPY JOURNEY</Text>
       <Text style={styles.heading2}>to  renew your beautiful memories</Text>
-      <TouchableOpacity  style={styles.button}  >
+      <TouchableOpacity onPress={()=> {navigation.navigate('Log')}}  style={styles.button}  >
                     <Image style={{ width: 25, height: 15, position: 'relative', top: 20, left: 90 }} source={require('./assets/icons8-arrow-100.png')} />
                     <Text style={{ color: 'white', fontSize: 23, position: 'relative',bottom:2, right:9,  fontFamily:'LilitaOne-Regular' }}>Get Started</Text>
                 </TouchableOpacity>

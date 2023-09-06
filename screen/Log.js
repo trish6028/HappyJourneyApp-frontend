@@ -1,7 +1,55 @@
-import React from 'react';
-import { View, Text, KeyboardAvoidingView, ImageBackground, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, KeyboardAvoidingView, ImageBackground, StyleSheet, TextInput, TouchableOpacity, Image , Alert} from 'react-native';
+import baseUrl from '../common/url.js'
 
-export default function Log() {
+
+export default function Log({navigation}) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+
+    const handleLoginPress = async () => {
+        if (!username || !password) {
+          Alert.alert('Login Error', 'Please enter your username and password.');
+          return;
+        }
+    
+        try {
+          const response = await fetch(`${baseUrl}/api/users/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username,
+              password,
+            }),
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            setPassword('');
+            setUsername('');
+            console.log(data);
+    
+            if (response.status === 200) {
+              
+              Alert.alert('Login Successful', 'Welcome!');
+              navigation.navigate('Journey');
+            } else {
+              Alert.alert('Login Failed', 'Your username or password is incorrect.');
+            }
+          } else {
+            const text = await response.text();
+            Alert.alert('Login Failed', 'An error occurred. Please try again.');
+          }
+        } catch (error) {
+          Alert.alert('Login Failed', 'An error occurred. Please try again.');
+        }
+      };
+    
+  
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <ImageBackground source={require('./assets/vv.png')} style={styles.image}>
@@ -16,6 +64,8 @@ export default function Log() {
                             style={styles.input}
                             placeholder="Username"
                             placeholderTextColor="#576574"
+                            value={username}
+                            onChangeText={setUsername}
                         />
                     </View>
                     <View style={styles.inputContainer}>
@@ -25,18 +75,20 @@ export default function Log() {
                             placeholder="Password"
                             placeholderTextColor="#576574"
                             secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
                         />
                     </View>
 
                     <Text style={{ position: 'relative', top: 25, right:97, fontSize:19 }}>Create an account</Text>
-                    <TouchableOpacity   style={styles.button1}  >
+                    <TouchableOpacity onPress={()=> {navigation.navigate('Signin')}}   style={styles.button1}  >
                         <Text style={{ color: 'black', fontSize: 22, position: 'relative', top: 5, fontFamily: 'LilitaOne-Regular' }}>sign up</Text>
                     </TouchableOpacity>
 
                 </View>
 
                 <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity onPress={handleLoginPress}   style={styles.button}>
                         <Text style={styles.buttonText}>log in</Text>
                     </TouchableOpacity>
                 </View>
